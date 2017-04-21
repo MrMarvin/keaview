@@ -1,0 +1,57 @@
+<ul class="nav">
+  <li class="nav-item">
+    <a class="nav-link active" href="/">All IPv4 leases</a>
+  </li>
+  <% (@lease4s.map {|l| l.subnet_id}).sort.uniq.each do |subnet| %>
+  <li class="nav-item">
+    <a class="nav-link" href="/?subnet_id=<%= subnet %>"><%= subnet %></a>
+  </li>
+  <% end %>
+  <li class="nav-item justify-content-end">
+    <a class="nav-link disabled" href="#">total: <%= @lease4s.count %></a>
+  </li>
+</ul>
+
+
+<h1>current leases <%= @subnet_id %></h1>
+
+<script>
+  $(document).ready(function()
+    {
+      $(".table").tablesorter();
+    }
+  );
+</script>
+
+<table style="width:100%" id="lease4Table" class="table">
+  <thead>
+  <tr>
+    <th>hostname</th>
+    <th>address</th>
+    <th>a record</th>
+    <th>hwaddr</th>
+    <th>client_id</th>
+    <th>dhcid record</th>
+    <th>expire</th>
+    <th>subnet_id</th>
+    <th>state</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @lease4s.each do |l| %>
+  <tr>
+    <td><%= l.hostname %></td>
+    <td><%= l.address %></td>
+    <td style="color:<%= l.a_record_equal_lease? ? "green" : 'red' %>;">
+      <%= (l.a_record_equal_lease? ? '✅ ' : '⚠️ ')  + l.a_record %>
+    </td>
+    <td><%= l.hwaddr %></td>
+    <td><%= l.client_id %></td>
+    <td><%= '✅' if l.dhcid_record != '' %></td>
+    <td><%= l.expire %></td>
+    <td><%= l.subnet_id %></td>
+    <td><%= l.state %></td>
+  </tr>
+  <% end %>
+  </tbody>
+</table>
