@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'resolv'
 require 'bundler/setup'
 Bundler.require(:default)
 autoload :Lease4, './model/lease4'
